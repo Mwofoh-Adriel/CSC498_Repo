@@ -17,13 +17,13 @@ const BibTexGenerator = () => {
     <div>
       <h2>BibTeX Entries</h2>
       <button onClick={handleFetchBibTeX}>Fetch BibTeX Entries</button>
-      <textarea
+      {bibtexEntries && (<textarea
         value={bibtexEntries}
         readOnly
         rows={20}
         cols={80}
         style={{ marginTop: '10px', fontFamily: 'monospace' }}
-      />
+      />)}
     </div>
   );
 };
