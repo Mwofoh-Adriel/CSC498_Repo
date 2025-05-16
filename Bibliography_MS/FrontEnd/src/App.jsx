@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BibliographyForm from './components/BibliographyForm';
 import BibliographyList from './components/BibliographyList';
 import BibTeXGenerator from './components/BibTexGenerator';
@@ -13,13 +13,24 @@ function App() {
     setEntries([...entries, entry]);
   };
 
-  // const deleteEntry = async (id) => {
-  //   try {
-  //     const response = await axios.delete(`http://localhost:3001/delete-entry/${id}`);
-  //     console.log(response.data.message);
-  //     const updatedEntries = entries.filter((_, i) => i !== id);
-  //     setEntries(updatedEntries);
-  // };
+  //Function to fetch authors data from the database
+  // Fetch authors data from the database and store in authorsData
+  const [authorsData, setAuthorsData] = useState([]);
+
+  // Fetch authors information from the database
+  const fetchAuthorsData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/get-authors');
+      setAuthorsData(response.data);
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+    }
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchAuthorsData();
+  }, []);
 
   const handleDeleteEntry = async (reference_id) => {
     // Show a confirmation dialog
@@ -29,13 +40,15 @@ function App() {
       // If the user cancels, exit the function
       return;
     }
-  
+  // Make a DELETE request to the server if the user confirms
     try {
       const response = await axios.delete(`http://localhost:3001/delete-entry/${reference_id}`);
       console.log(response.data.message);
   
       // Update the UI after deletion
-      setEntries((prevEntries) => prevEntries.filter((entry) => entry.reference_id !== reference_id));
+      
+    fetchAuthorsData(); // Fetch the updated authors data after deletion
+
     } catch (error) {
       console.error('Error deleting entry:', error);
     }
@@ -44,9 +57,9 @@ function App() {
   return (
     <div className="App">
       <h1>Bibliographic Management System</h1>
-      <BibliographyForm onAddEntry={addEntry} />
-      <BibliographyList entries={entries} handleDeleteEntry={handleDeleteEntry} />
-      <BibTeXGenerator entries={entries} />
+      <BibliographyForm fetchAuthorsData={fetchAuthorsData} onAddEntry={addEntry} />
+      <BibliographyList authorsData={authorsData} handleDeleteEntry={handleDeleteEntry} />
+      <BibTeXGenerator />
       <CitationStyleSelector entries={entries} />
     </div>
   );

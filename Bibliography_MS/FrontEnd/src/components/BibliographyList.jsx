@@ -1,17 +1,24 @@
-import React from 'react';
+// This component displays a list of bibliographic entries and allows the user to delete them.
+// It fetches the authors from the database and displays them in the bibliography list.
 
-const BibliographyList = ({ entries, handleDeleteEntry }) => {
+//Code to fetch the authors from the database and display them in the bibliography list
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+
+const BibliographyList = ({ authorsData, handleDeleteEntry }) => {
+ 
+
   return (
     <div>
       <h2>Bibliographic Entries</h2>
       <ul>
-        {entries.map((entry) => (
-          <li key={entry.reference_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {authorsData.map((author) => (
+          <li key={author.reference_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <strong>{entry.title}</strong> by {entry.authors.join(', ')} ({entry.year})
+              <strong>{author.title}</strong> by ({author.authors}) ({author.year})
             </div>
             <button
-              onClick={() => handleDeleteEntry(entry.reference_id)} // Pass reference_id instead of index
+              onClick={() => handleDeleteEntry(author.reference_id)} // Using `id` for deletion
               style={{
                 background: 'none',
                 border: 'none',
@@ -19,7 +26,7 @@ const BibliographyList = ({ entries, handleDeleteEntry }) => {
                 cursor: 'pointer',
                 fontSize: '16px',
               }}
-              title="Delete Entry"
+              title="Delete Author"
             >
               ❌
             </button>

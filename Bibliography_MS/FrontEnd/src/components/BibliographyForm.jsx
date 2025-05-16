@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const BibliographyForm = ({ onAddEntry }) => {
+const BibliographyForm = ({ fetchAuthorsData, onAddEntry }) => {
   const [formData, setFormData] = useState({
     authors: [''],
     title: '',
     type: '',
+    publisher: '',
+    conference: '',
     article: '',
     report: '',
     year: '',
@@ -45,6 +47,8 @@ const BibliographyForm = ({ onAddEntry }) => {
       setFormData({
         authors: [''],
         title: '',
+        publisher: '',
+        conference: '',
         type: '',
         article: '',
         report: '',
@@ -54,6 +58,9 @@ const BibliographyForm = ({ onAddEntry }) => {
         pages: '',
         doi: '',
       });
+
+      fetchAuthorsData(); // Fetch the updated authors data after submission
+      
     } catch (error) {
       console.error('Error sending data to the server:', error);
     }
