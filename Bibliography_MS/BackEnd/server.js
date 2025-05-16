@@ -38,15 +38,15 @@ console.log('Database connection pool created');
 app.post('/add-entry', async (req, res) => {
     // Extract data from the request body
 
-    const { authors, title, type, year, volume, issue, pages, doi } = req.body;
+    const { authors, title, publisher, type, year, volume, issue, pages, doi } = req.body;
 
     try {
         const referenceQuery = `
-            INSERT INTO reference (title, type, year, volume, issue, pages, doi)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO reference (title, publisher, type, year, volume, issue, pages, doi)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const referenceResult = await new Promise((resolve, reject) => {
-            db.query(referenceQuery, [title, type, year, volume, issue, pages, doi], (err, result) => {
+            db.query(referenceQuery, [title, publisher, type, year, volume, issue, pages, doi], (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
             });
@@ -129,6 +129,72 @@ app.delete('/delete-entry/:id', async (req, res) => {
     } catch (err) {
         console.error('Error deleting entry:', err);
         res.status(500).send({ message: 'Error deleting entry' });
+    }
+});
+
+// Endpoint to handle retrieving entries from the database in Bibtex format
+app.get('/get-bibtex', async (req, res) => {
+    try {
+        const querybibtex = `
+            SELECT r.reference_id, r.title, r.publisher, r.type, r.year, r.volume, r.issue, r.pages, r.doi,
+                   GROUP_CONCAT(a.name SEPARATOR ' and ') AS authors
+            FROM reference r
+            JOIN reference_authors ra ON r.reference_id = ra.reference_id
+            JOIN authors a ON ra.author_id = a.author_id
+            GROUP BY r.reference_id
+        `;
+        const results = await new Promise((resolve, reject) => {
+            db.query(querybibtex, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        const bibtexEntries = results.map(entry => {
+            return `@${entry.type}{${entry.reference_id},
+  author = {${entry.authors}},
+  title = {${entry.title}},
+  publisher = {${entry.publisher}},
+  year = {${entry.year}},
+  volume = {${entry.volume}},
+  issue = {${entry.issue}},
+  pages = {${entry.pages}},
+  doi = {${entry.doi}}
+}`;
+        });
+
+        res.status(200).send(bibtexEntries.join('\n\n'));
+    } catch (err) {
+        console.error('Error retrieving BibTeX entries:', err);
+        res.status(500).send({ message: 'Error retrieving BibTeX entries' });
+    }
+});
+
+// Endpoint to handle retrieving all authors from the database
+app.get('/get-authors', async (req, res) => {
+    try {
+        //query to get all the authors names, title and year of work from the database
+        // and join them with the reference table
+        const queryauthorsData = `
+            SELECT r.reference_id, r.title, r.year, GROUP_CONCAT(a.name SEPARATOR ', ') AS authors
+            FROM reference r
+            JOIN reference_authors ra ON r.reference_id = ra.reference_id
+            JOIN authors a ON ra.author_id = a.author_id
+            GROUP BY r.reference_id
+            
+        `;
+        const results = await new Promise((resolve, reject) => {
+            db.query(queryauthorsData, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        
+        res.status(200).send(results);
+    } catch (err) {
+        console.error('Error retrieving authors data in /get-authors endpoint:', err);
+        res.status(500).send({ message: 'Error retrieving authors data' });
     }
 });
 

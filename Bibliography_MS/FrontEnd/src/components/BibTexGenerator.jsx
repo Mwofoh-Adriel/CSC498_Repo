@@ -1,25 +1,31 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 
-const BibTeXGenerator = ({ entries }) => {
-  const generateBibTeX = () => {
-    const bibtex = entries
-      .map((entry, index) => {
-        return `@${entry.type}{entry${index},
-  author = {${entry.authors.join(' and ')}},
-  title = {${entry.title}},
-  year = {${entry.year}},
-  journal = {${entry.journal}},
-  volume = {${entry.volume}},
-  number = {${entry.issue}},
-  pages = {${entry.pages}},
-  doi = {${entry.doi}}
-}`;
-      })
-      .join('\n\n');
-    console.log(bibtex);
+const BibTexGenerator = () => {
+  const [bibtexEntries, setBibtexEntries] = useState('');
+
+  const handleFetchBibTeX = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/get-bibtex');
+      setBibtexEntries(response.data); // Set the BibTeX entries in state
+    } catch (error) {
+      console.error('Error fetching BibTeX entries:', error);
+    }
   };
 
-  return <button onClick={generateBibTeX}>Generate BibTeX</button>;
+  return (
+    <div>
+      <h2>BibTeX Entries</h2>
+      <button onClick={handleFetchBibTeX}>Fetch BibTeX Entries</button>
+      <textarea
+        value={bibtexEntries}
+        readOnly
+        rows={20}
+        cols={80}
+        style={{ marginTop: '10px', fontFamily: 'monospace' }}
+      />
+    </div>
+  );
 };
 
-export default BibTeXGenerator;
+export default BibTexGenerator;
