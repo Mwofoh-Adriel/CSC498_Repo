@@ -83,7 +83,7 @@ const BibliographyForm = ({ onAddEntry }) => {
         <label>Type:</label>
         <select name="type" value={formData.type} onChange={handleInputChange}>
           <option value="">Select Type</option>
-          <option value="journal">article</option>
+          <option value="article">article</option>
           <option value="book">Book</option>
           <option value="conference">Conference</option>
           <option value="report">report</option>

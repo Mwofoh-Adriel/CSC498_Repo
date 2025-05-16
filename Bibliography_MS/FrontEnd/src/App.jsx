@@ -22,6 +22,14 @@ function App() {
   // };
 
   const handleDeleteEntry = async (reference_id) => {
+    // Show a confirmation dialog
+    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
+    
+    if (!confirmDelete) {
+      // If the user cancels, exit the function
+      return;
+    }
+  
     try {
       const response = await axios.delete(`http://localhost:3001/delete-entry/${reference_id}`);
       console.log(response.data.message);
