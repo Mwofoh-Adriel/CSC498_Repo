@@ -65,6 +65,19 @@ form button:hover {
   background-color: #45a049;
 }
 
+/* generate bibtex button Styles */
+div button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+div button:hover {
+  background-color: #45a049;
+}
+
 /* List Styles */
 ul {
   list-style-type: none;

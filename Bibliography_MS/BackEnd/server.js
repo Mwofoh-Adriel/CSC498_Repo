@@ -7,7 +7,8 @@
 // It also links the reference ID and author ID in the 'reference_authors' table.
 //  The server responds with success or error messages based on the database operations.
 
-
+//..............................................................................................
+//Setup database
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
@@ -34,6 +35,8 @@ const db = mysql.createPool({
 
 console.log('Database connection pool created');
 
+
+//..............................................................................................
 // Endpoint to handle form submissions
 app.post('/add-entry', async (req, res) => {
     // Extract data from the request body
@@ -77,16 +80,10 @@ app.post('/add-entry', async (req, res) => {
         res.status(500).send('Error processing entry');
     }
 
-    // try {
-    //     const referenceId = /* logic to insert into the database and get the ID */;
-    //     res.status(200).send({ message: 'Entry added successfully', reference_id: referenceId });
-    //   } catch (error) {
-    //     console.error('Error adding entry:', error);
-    //     res.status(500).send({ message: 'Error adding entry' });
-    //   }
 });
 
 
+//..............................................................................................
 // Endpoint to handle deletion of entries
 app.delete('/delete-entry/:id', async (req, res) => {
     const { id } = req.params;
@@ -132,26 +129,37 @@ app.delete('/delete-entry/:id', async (req, res) => {
     }
 });
 
-// Endpoint to handle retrieving entries from the database in Bibtex format
-app.get('/get-bibtex', async (req, res) => {
+
+//..............................................................................................
+// Endpoint to handle retrieving an entry from the database in Bibtex format
+app.get('/get-bibtex/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        const querybibtex = `
-            SELECT r.reference_id, r.title, r.publisher, r.type, r.year, r.volume, r.issue, r.pages, r.doi,
-                   GROUP_CONCAT(a.name SEPARATOR ' and ') AS authors
+        //Query to get the bibtex entry from the database with it's associated data
+        //and join them with the reference table
+        const queryEntry = `
+            SELECT r.type, r.reference_id, r.title, r.publisher, r.year, r.volume, r.issue, r.pages, r.doi,
+            GROUP_CONCAT(a.name SEPARATOR ', ') AS authors
             FROM reference r
             JOIN reference_authors ra ON r.reference_id = ra.reference_id
             JOIN authors a ON ra.author_id = a.author_id
+            WHERE r.reference_id = ?
             GROUP BY r.reference_id
         `;
         const results = await new Promise((resolve, reject) => {
-            db.query(querybibtex, (err, results) => {
+            db.query(queryEntry, [id], (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
             });
         });
 
-        const bibtexEntries = results.map(entry => {
-            return `@${entry.type}{${entry.reference_id},
+        if (results.length === 0) {
+            return res.status(404).send({ message: 'Entry not found' });
+        }
+
+        // Format the result as a BibTeX entry
+        const entry = results[0];
+        const bibtexEntry = `@${entry.type}{${entry.reference_id},
   author = {${entry.authors}},
   title = {${entry.title}},
   publisher = {${entry.publisher}},
@@ -161,16 +169,18 @@ app.get('/get-bibtex', async (req, res) => {
   pages = {${entry.pages}},
   doi = {${entry.doi}}
 }`;
-        });
-
-        res.status(200).send(bibtexEntries.join('\n\n'));
+        // console.log("The Bib entry being sent is: ", bibtexEntry)
+        // Send the BibTeX entry as a response
+        res.status(200).send(bibtexEntry);
     } catch (err) {
-        console.error('Error retrieving BibTeX entries:', err);
-        res.status(500).send({ message: 'Error retrieving BibTeX entries' });
+        console.error('Error retrieving BibTeX entry:', err);
+        res.status(500).send({ message: 'Error retrieving BibTeX entry' });
     }
 });
 
-// Endpoint to handle retrieving all authors from the database
+
+//..............................................................................................
+// Endpoint to handle retrieving all authors from the database to display existing authors and data
 app.get('/get-authors', async (req, res) => {
     try {
         //query to get all the authors names, title and year of work from the database
@@ -198,10 +208,9 @@ app.get('/get-authors', async (req, res) => {
     }
 });
 
+//..............................................................................................
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
-
-
 

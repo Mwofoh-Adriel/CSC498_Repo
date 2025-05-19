@@ -1,13 +1,8 @@
 // This component displays a list of bibliographic entries and allows the user to delete them.
-// It fetches the authors from the database and displays them in the bibliography list.
+// And also allows you to generate bibtex of the entries
 
-//Code to fetch the authors from the database and display them in the bibliography list
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-
-const BibliographyList = ({ authorsData, handleDeleteEntry }) => {
+const BibliographyList = ({ authorsData, handleDeleteEntry, handleFetchBibTeX }) => {
  
-
   return (
     <div>
       <h2>Bibliographic Entries</h2>
@@ -15,7 +10,20 @@ const BibliographyList = ({ authorsData, handleDeleteEntry }) => {
         {authorsData.map((author) => (
           <li key={author.reference_id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <strong>{author.title}</strong> by ({author.authors}) ({author.year})
+              <strong>{author.title}</strong> by ({author.authors}) ({author.year}) <button
+                onClick={() => handleFetchBibTeX(author.reference_id)} // Fetch BibTeX for this entry
+                style={{
+                  background: 'none',
+                  border: '1px solid blue',
+                  color: 'blue',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  marginRight: '10px',
+                }}
+                
+              >
+                Generate BibTeX
+              </button>
             </div>
             <button
               onClick={() => handleDeleteEntry(author.reference_id)} // Using `id` for deletion
