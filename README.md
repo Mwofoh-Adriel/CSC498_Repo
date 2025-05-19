@@ -79,3 +79,109 @@ A bibliographical management system is a software application designed to help u
 - **React** for the Frontend
 - **MySQL** for the database *(tentative)*
 - **Node.js** for the backend to link the database and frontend
+
+### ..............................................................................
+## Setting up the application locally
+
+### Required Applications and Systems to run this website
+
+To run this application, you will need the following:
+
+1. **Node.js**: A JavaScript runtime for running the backend server.
+   - Download and install from [Node.js Official Website](https://nodejs.org/).
+
+2. **XAMPP**: A free and open-source cross-platform web server solution that includes MySQL for database management.
+   - Download and install from [XAMPP Official Website](https://www.apachefriends.org/).
+
+3. **React**: A JavaScript library for building the frontend.
+   - React is included in the project dependencies and will be installed via `npm`.
+
+4. **Git**: A version control system to clone the repository.
+   - Download and install from [Git Official Website](https://git-scm.com/).
+
+5. **A Code Editor**: Recommended: [Visual Studio Code](https://code.visualstudio.com/).
+
+---
+
+### Setting Up the XAMPP Database
+1. **Start XAMPP**:
+   - Open the XAMPP Control Panel.
+   - Start the `Apache` and `MySQL` modules.
+
+2. **Access phpMyAdmin**:
+   - Open a browser and navigate to `http://localhost/phpmyadmin`.
+
+3. **Create the Database**:
+   - Click on the "New" button in phpMyAdmin.
+   - Enter the database name (e.g., `bibliography_sys`) and click "Create".
+
+4. **Run the SQL Script**:
+   - Open the SQL tab in phpMyAdmin.
+   - Copy and paste the following SQL script to create the required tables:
+
+```sql
+CREATE TABLE authors (
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE reference (
+    reference_id INT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50),
+    title VARCHAR(255) NOT NULL,
+    publisher VARCHAR(255),
+    year INT,
+    volume INT,
+    issue INT,
+    pages VARCHAR(50),
+    doi VARCHAR(255)
+);
+
+CREATE TABLE reference_authors (
+    reference_id INT,
+    author_id INT,
+    PRIMARY KEY (reference_id, author_id),
+    FOREIGN KEY (reference_id) REFERENCES reference(reference_id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES authors(author_id) ON DELETE CASCADE
+);
+```
+
+### Setting Up and Running application
+1. **Clone the Repository**:
+
+  -Open a terminal and run:
+     `git clone https://github.com/tataw-cl/CSC498_Repo.git`
+    then
+     `cd CSC498_Repo`
+
+2. **Install Backend Dependencies**:
+
+  -Navigate to the backend directory:
+   `cd Bibliography_MS/BackEnd`
+  -Install the required dependencies:
+   `npm install`
+
+3. **Install Frontend Dependencies**:
+
+  -Navigate to the frontend directory:
+   `cd ../FrontEnd`
+  -Install the required dependencies:
+   `npm install`
+
+
+### Starting the Application
+1. **Start the Backend Server**:
+
+  -Navigate to the backend directory:
+   `cd Bibliography_MS/BackEnd`
+  -Start the server:
+   `node server.js`
+The backend server will run on http://localhost:3001.
+
+2. **Start the Frontend Client**
+  -Open a new terminal.
+  -Navigate to the frontend directory:
+   `cd Bibliography_MS/FrontEnd`
+  -Start the React development server:
+   `npm start`
+  The frontend will run on http://localhost:5173 (or another port if specified)
