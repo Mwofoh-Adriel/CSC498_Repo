@@ -45,7 +45,7 @@ A bibliographical management system is a software application designed to help u
   - Pages
   - DOI or URL (if applicable)
 
-### 2. MySQL BibTeX Database Design *(tentative)*
+### 2. MySQL BibTeX Database Design
 **Objective:**
 - Design a relational database using MySQL *(tentative)* to store bibliographic entries in a structured format.
 
@@ -148,40 +148,37 @@ CREATE TABLE reference_authors (
 
 ### Setting Up and Running application
 1. **Clone the Repository**:
-
-  -Open a terminal and run:
-     `git clone https://github.com/tataw-cl/CSC498_Repo.git`
-    then
-     `cd CSC498_Repo`
+  - Open a terminal and run:
+    - `git clone https://github.com/tataw-cl/CSC498_Repo.git`
+    - then run `cd CSC498_Repo`
 
 2. **Install Backend Dependencies**:
-
-  -Navigate to the backend directory:
-   `cd Bibliography_MS/BackEnd`
-  -Install the required dependencies:
-   `npm install`
+  - Navigate to the backend directory:
+    - run `cd Bibliography_MS/BackEnd`
+  - Install the required dependencies:
+    - run `npm install`
 
 3. **Install Frontend Dependencies**:
-
-  -Navigate to the frontend directory:
-   `cd ../FrontEnd`
-  -Install the required dependencies:
-   `npm install`
+  - Navigate to the frontend directory:
+    - run `cd ../FrontEnd`
+  - Install the required dependencies:
+    - run `npm install`
 
 
 ### Starting the Application
 1. **Start the Backend Server**:
+  - Navigate to the backend directory:
+    - run `cd Bibliography_MS/BackEnd`
+  - Start the server:
+    - run `node server.js`
 
-  -Navigate to the backend directory:
-   `cd Bibliography_MS/BackEnd`
-  -Start the server:
-   `node server.js`
 The backend server will run on http://localhost:3001.
 
 2. **Start the Frontend Client**
-  -Open a new terminal.
-  -Navigate to the frontend directory:
-   `cd Bibliography_MS/FrontEnd`
-  -Start the React development server:
-   `npm start`
+  - Open a new terminal.
+  - Navigate to the frontend directory:
+    - run `cd Bibliography_MS/FrontEnd`
+  - Start the React development server:
+    - run `npm start`
+
   The frontend will run on http://localhost:5173 (or another port if specified)
