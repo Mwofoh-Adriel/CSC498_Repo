@@ -8,14 +8,19 @@ import axios from 'axios';
 
 function App() {
   const [entries, setEntries] = useState([]);
+  const [authorsData, setAuthorsData] = useState([]);
+  const [selectedBibTeX, setSelectedBibTeX] = useState("")
 
+  //..........................................................................................
+  //State to add new entries to the database
   const addEntry = (entry) => {
     setEntries([...entries, entry]);
   };
 
+
+//.............................................................................................
   //Function to fetch authors data from the database
   // Fetch authors data from the database and store in authorsData
-  const [authorsData, setAuthorsData] = useState([]);
 
   // Fetch authors information from the database
   const fetchAuthorsData = async () => {
@@ -31,6 +36,10 @@ function App() {
   useEffect(() => {
     fetchAuthorsData();
   }, []);
+
+
+//..............................................................................................
+  //Function to handle the deletion of entries from the database
 
   const handleDeleteEntry = async (reference_id) => {
     // Show a confirmation dialog
@@ -53,13 +62,29 @@ function App() {
       console.error('Error deleting entry:', error);
     }
   };
+  
 
+  //............................................................................................
+  //Function to handle fetching individual bibtex entry
+  
+    const handleFetchBibTeX = async (reference_id) => {
+      try {
+        const response = await axios.get(`http://localhost:3001/get-bibtex/${reference_id}`);
+        setSelectedBibTeX(response.data); // Set the BibTeX entries to Entryresult
+        // console.log("here's the bibtex entry for this person:", selectedBibTeX)
+      } catch (error) {
+        console.error('Error fetching BibTeX entries:', error);
+      }
+    };
+
+
+    //.........................................................................................
   return (
     <div className="App">
       <h1>Bibliographic Management System</h1>
       <BibliographyForm fetchAuthorsData={fetchAuthorsData} onAddEntry={addEntry} />
-      <BibliographyList authorsData={authorsData} handleDeleteEntry={handleDeleteEntry} />
-      <BibTeXGenerator />
+      <BibliographyList authorsData={authorsData} handleDeleteEntry={handleDeleteEntry} handleFetchBibTeX={handleFetchBibTeX} />
+      <BibTeXGenerator bibtexEntry={selectedBibTeX} />
       <CitationStyleSelector entries={entries} />
     </div>
   );
