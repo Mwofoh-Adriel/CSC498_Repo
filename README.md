@@ -179,6 +179,6 @@ The backend server will run on http://localhost:3001.
   - Navigate to the frontend directory:
     - run `cd Bibliography_MS/FrontEnd`
   - Start the React development server:
-    - run `npm start`
+    - run `npm run dev`
 
   The frontend will run on http://localhost:5173 (or another port if specified)
