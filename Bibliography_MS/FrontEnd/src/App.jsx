@@ -85,7 +85,7 @@ function App() {
       <BibliographyForm fetchAuthorsData={fetchAuthorsData} onAddEntry={addEntry} />
       <BibliographyList authorsData={authorsData} handleDeleteEntry={handleDeleteEntry} handleFetchBibTeX={handleFetchBibTeX} />
       <BibTeXGenerator bibtexEntry={selectedBibTeX} />
-      <CitationStyleSelector entries={entries} />
+      <CitationStyleSelector entry={selectedBibTeX} />
     </div>
   );
 }
