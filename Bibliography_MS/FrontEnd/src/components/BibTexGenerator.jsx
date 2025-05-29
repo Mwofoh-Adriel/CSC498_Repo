@@ -8,8 +8,8 @@ const BibTeXGenerator = ({ bibtexEntry }) => {
         <textarea
           value={bibtexEntry}
           readOnly
-          rows={20}
-          cols={80}
+          rows={10}
+          cols={15}
           style={{ marginTop: '10px', fontFamily: 'monospace' }}
         />
       ) : (

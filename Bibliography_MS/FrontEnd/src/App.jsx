@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import BibliographyForm from './components/BibliographyForm';
 import BibliographyList from './components/BibliographyList';
 import BibTeXGenerator from './components/BibTexGenerator';
-import CitationStyleSelector from './components/CitationStyleSelector';
+import ReferenceStyleSelector from './components/ReferenceStyleSelector';
 import './App.css';
 import axios from 'axios';
 
@@ -85,7 +85,7 @@ function App() {
       <BibliographyForm fetchAuthorsData={fetchAuthorsData} onAddEntry={addEntry} />
       <BibliographyList authorsData={authorsData} handleDeleteEntry={handleDeleteEntry} handleFetchBibTeX={handleFetchBibTeX} />
       <BibTeXGenerator bibtexEntry={selectedBibTeX} />
-      <CitationStyleSelector entry={selectedBibTeX} />
+      <ReferenceStyleSelector entry={selectedBibTeX} />
     </div>
   );
 }
