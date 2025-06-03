@@ -43,7 +43,7 @@ const ReferenceStyleSelector = ({ entry }) => {
     `(${e.author}, (${e.year}), ${e.title}, ${e.publisher ? e.publisher + '.' : ''})`;
 
 const formatIEEE = (e) =>
-  `${formatAuthors(e.author)} "${e.title}," ${e.publisher ? e.publisher + ',' : ''} ${e.year}.`;
+  `${formatAuthors(e.author)} "${e.title}", ${e.publisher ? e.publisher + ',' : ''} ${e.year}.`;
 
 const formatHarvard = (e) =>
   `${formatAuthors(e.author)} ${e.year} ${e.title} ${e.publisher ? e.publisher + '.' : ''}`;
