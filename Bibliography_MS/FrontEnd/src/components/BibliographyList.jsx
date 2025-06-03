@@ -22,7 +22,7 @@ const BibliographyList = ({ authorsData, handleDeleteEntry, handleFetchBibTeX })
                 }}
                 
               >
-                Generate BibTeX
+                Select Entry
               </button>
             </div>
             <button
